@@ -21,6 +21,7 @@ public class ShortUrl {
     private String originalUrl;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime expires;
+    private Long consumedTimes = 0L;
 
     public ShortUrl(ShortUrlRequest request) {
         originalUrl = request.getUrl();
@@ -28,7 +29,6 @@ public class ShortUrl {
             expires = setExpirationFromRequest(request.getExpiration());
         }
     }
-
 
     private LocalDateTime setExpirationFromRequest(Expiration expire) {
         String unit = expire.getUnit();
@@ -49,6 +49,18 @@ public class ShortUrl {
         return url;
     }
 
+    public Long getConsumedTimes() {
+        return consumedTimes;
+    }
+
+    public void setConsumedTimes(Long consumedTimes) {
+        this.consumedTimes = consumedTimes;
+    }
+
+    public void increaseComsumtion() {
+        setConsumedTimes(getConsumedTimes() + 1);
+    }
+
     public String getOriginalUrl() {
         return originalUrl;
     }
@@ -66,13 +78,14 @@ public class ShortUrl {
             return false;
         }
         ShortUrl shortUrl = (ShortUrl) o;
-        return Objects.equals(this.url, shortUrl.url) &&
+        return Objects.equals(url, shortUrl.url) &&
                 Objects.equals(originalUrl, shortUrl.originalUrl) &&
-                Objects.equals(expires, shortUrl.expires);
+                Objects.equals(expires, shortUrl.expires) &&
+                Objects.equals(consumedTimes, shortUrl.consumedTimes);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(url, originalUrl, expires);
+        return Objects.hash(url, originalUrl, expires, consumedTimes);
     }
 }

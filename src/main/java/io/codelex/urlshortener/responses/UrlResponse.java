@@ -1,4 +1,4 @@
-package io.codelex.urlshortener.models;
+package io.codelex.urlshortener.responses;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
