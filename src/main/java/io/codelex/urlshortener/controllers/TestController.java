@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/testing-api")
 class TestController {
-    UrlService services;
+    private final UrlService services;
 
     public TestController(UrlService services) {
         this.services = services;

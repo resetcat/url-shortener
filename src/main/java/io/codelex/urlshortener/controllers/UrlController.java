@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api")
 class UrlController {
-    UrlService services;
+    private final UrlService services;
 
     public UrlController(UrlService services) {
         this.services = services;

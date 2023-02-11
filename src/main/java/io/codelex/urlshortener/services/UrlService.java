@@ -1,10 +1,11 @@
 package io.codelex.urlshortener.services;
 
 import io.codelex.urlshortener.models.ShortUrl;
-import io.codelex.urlshortener.responses.StatisticsResponse;
-import io.codelex.urlshortener.responses.UrlResponse;
 import io.codelex.urlshortener.repositories.UrlRepository;
 import io.codelex.urlshortener.requests.ShortUrlRequest;
+import io.codelex.urlshortener.responses.StatisticsResponse;
+import io.codelex.urlshortener.responses.UrlResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -14,7 +15,9 @@ import java.util.regex.Pattern;
 
 @Service
 public class UrlService {
-    UrlRepository repository;
+    private final UrlRepository repository;
+    @Value("${local.host}")
+    private String address;
 
     public UrlService(UrlRepository repository) {
         this.repository = repository;
@@ -22,9 +25,10 @@ public class UrlService {
 
     public UrlResponse addUrl(ShortUrlRequest requestBody) {
         validateUrl(requestBody.getUrl());
-        ShortUrl shortUrl = new ShortUrl(requestBody);
-        repository.save(shortUrl);
-        return new UrlResponse(shortUrl.getUrl(), shortUrl.getExpires());
+        ShortUrl temp = new ShortUrl(requestBody);
+        repository.save(temp);
+        String shortUrl = address + temp.getUrl();
+        return new UrlResponse(shortUrl, temp.getExpires());
     }
 
     public void validateUrl(String url) {
@@ -59,5 +63,16 @@ public class UrlService {
     private ShortUrl CheckUrlExists(int id) {
         return repository.findById(id)
                          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    public String getOriginalUrlbyId(Long id) {
+        ShortUrl shortUrl = CheckUrlExists(Math.toIntExact(id));
+        return shortUrl.getOriginalUrl();
+    }
+
+    public void consumeUrl(Long id) {
+        ShortUrl shortUrl = CheckUrlExists(Math.toIntExact(id));
+        shortUrl.increaseComsumtion();
+        repository.save(shortUrl);
     }
 }
