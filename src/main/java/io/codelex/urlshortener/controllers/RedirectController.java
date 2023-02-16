@@ -17,7 +17,7 @@ class RedirectController {
 
     @GetMapping("/{id:\\d+}")
     public RedirectView redirectShortUrl(@PathVariable("id") Long id) {
-        String originalUrl = service.getOriginalUrlbyId(id);
+        String originalUrl = service.getOriginalUrlById(id);
         originalUrl = service.addHttps(originalUrl);
         service.consumeUrl(id);
         RedirectView redirectView = new RedirectView(originalUrl);

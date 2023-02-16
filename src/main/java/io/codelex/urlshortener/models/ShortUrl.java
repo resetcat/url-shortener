@@ -57,7 +57,7 @@ public class ShortUrl {
         this.consumedTimes = consumedTimes;
     }
 
-    public void increaseComsumtion() {
+    public void increaseConsumption() {
         setConsumedTimes(getConsumedTimes() + 1);
     }
 

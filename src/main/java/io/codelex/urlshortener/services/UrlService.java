@@ -55,24 +55,24 @@ public class UrlService {
     }
 
     public StatisticsResponse getUrlConsumptionCount(Long urlId) {
-        ShortUrl shortUrl = CheckUrlExists(Math.toIntExact(urlId));
+        ShortUrl shortUrl = checkUrlExists(Math.toIntExact(urlId));
         Long consumes = shortUrl.getConsumedTimes();
         return new StatisticsResponse(consumes);
     }
 
-    private ShortUrl CheckUrlExists(int id) {
+    private ShortUrl checkUrlExists(int id) {
         return repository.findById(id)
                          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    public String getOriginalUrlbyId(Long id) {
-        ShortUrl shortUrl = CheckUrlExists(Math.toIntExact(id));
+    public String getOriginalUrlById(Long id) {
+        ShortUrl shortUrl = checkUrlExists(Math.toIntExact(id));
         return shortUrl.getOriginalUrl();
     }
 
     public void consumeUrl(Long id) {
-        ShortUrl shortUrl = CheckUrlExists(Math.toIntExact(id));
-        shortUrl.increaseComsumtion();
+        ShortUrl shortUrl = checkUrlExists(Math.toIntExact(id));
+        shortUrl.increaseConsumption();
         repository.save(shortUrl);
     }
 
