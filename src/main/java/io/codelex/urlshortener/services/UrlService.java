@@ -75,4 +75,11 @@ public class UrlService {
         shortUrl.increaseComsumtion();
         repository.save(shortUrl);
     }
+
+    public String addHttps(String url) {
+        if (!url.matches("^https?:.*")) {
+            url = "https://" + url;
+        }
+        return url;
+    }
 }
